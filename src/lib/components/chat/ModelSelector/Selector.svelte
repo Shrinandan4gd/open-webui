@@ -500,11 +500,7 @@
 												content={$user?.role === 'admin' ? (item?.value ?? '') : ''}
 												placement="top-start"
 											>
-												<img
-													src={item.model?.info?.meta?.profile_image_url ?? '/static/favicon.png'}
-													alt="Model"
-													class="rounded-full size-5 flex items-center mr-2"
-												/>
+												<!-- Model icon removed -->
 
 												<div class="flex items-center line-clamp-1">
 													<div class="line-clamp-1">

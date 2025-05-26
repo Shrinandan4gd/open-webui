@@ -157,7 +157,21 @@
 				'personalsettings',
 				'customsettings',
 				'userpreferences',
-				'accountpreferences'
+				'accountpreferences',
+				'assistant',
+				'assistantname',
+				'name',
+				'rename',
+				'jarvis',
+				'branding',
+				'customization',
+				'icon',
+				'logo',
+				'favicon',
+				'upload',
+				'custom',
+				'whitelabel',
+				'identity'
 			]
 		},
 		{

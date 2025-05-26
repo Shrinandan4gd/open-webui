@@ -1306,8 +1306,8 @@
 	"Web Search in Chat": "",
 	"Web Search Query Generation": "",
 	"Webhook URL": "",
-	"WebUI Settings": "",
 	"WebUI URL": "",
+	"Welcome to {{name}}": "",
 	"WebUI will make requests to \"{{url}}\"": "",
 	"WebUI will make requests to \"{{url}}/api/chat\"": "",
 	"WebUI will make requests to \"{{url}}/chat/completions\"": "",
@@ -1346,5 +1346,20 @@
 	"Your entire contribution will go directly to the plugin developer; Open WebUI does not take any percentage. However, the chosen funding platform might have its own fees.": "",
 	"Youtube": "",
 	"Youtube Language": "",
-	"Youtube Proxy URL": ""
+	"Youtube Proxy URL": "",
+
+	"Assistant Name": "",
+	"Customize the name of your assistant. Leave empty to use \"Jarvis\" as default.": "",
+	"Enter assistant name (e.g., Jarvis, Assistant)": "",
+	"Upload Custom Icon": "",
+	"Upload a custom icon to replace the default branding. Supports .ico, .png, and .svg files (max 1MB).": "",
+	"Please upload a valid icon file (.ico, .png, .svg)": "",
+	"Icon file size must be less than 1MB": "",
+	"Icon uploaded successfully": "",
+	"Failed to upload icon": "",
+	"Custom icon active": "",
+	"Remove": "",
+	"Icon reset to default": "",
+	"Change Icon": "",
+	"Upload Icon": ""
 }

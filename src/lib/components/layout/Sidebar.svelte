@@ -42,6 +42,7 @@
 	} from '$lib/apis/chats';
 	import { createNewFolder, getFolders, updateFolderParentIdById } from '$lib/apis/folders';
 	import { WEBUI_BASE_URL } from '$lib/constants';
+	import { WEBUI_NAME } from '$lib/stores';
 
 	import ArchivedChatsModal from './Sidebar/ArchivedChatsModal.svelte';
 	import UserMenu from './Sidebar/UserMenu.svelte';
@@ -78,6 +79,9 @@
 
 	let folders = {};
 	let newFolderId = null;
+
+	// Custom logo logic
+	$: logoSrc = $settings?.customIcon?.data || '/jarvis-logo.svg';
 
 	const initFolders = async () => {
 		const folderList = await getFolders(localStorage.token).catch((error) => {
@@ -503,7 +507,7 @@
 					<div class="self-center mx-1.5">
 						<img
 							crossorigin="anonymous"
-							src="{WEBUI_BASE_URL}/static/favicon.png"
+							src={logoSrc}
 							class=" size-5 -translate-x-1.5 rounded-full"
 							alt="logo"
 						/>

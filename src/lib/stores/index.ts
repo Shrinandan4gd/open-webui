@@ -64,6 +64,81 @@ export const banners: Writable<Banner[]> = writable([]);
 
 export const settings: Writable<Settings> = writable({});
 
+// Branding and customization utilities
+export const updateBranding = (assistantName?: string, customIcon?: any) => {
+	// Update assistant name
+	if (assistantName !== undefined) {
+		const finalName = assistantName.trim() || 'Jarvis';
+		WEBUI_NAME.set(finalName);
+		if (typeof document !== 'undefined') {
+			document.title = finalName;
+		}
+	}
+
+	// Update custom icon
+	if (customIcon?.data && typeof document !== 'undefined') {
+		updateCustomIcon(customIcon.data);
+	} else if (customIcon === null && typeof document !== 'undefined') {
+		// Use Jarvis logo as default when no custom icon
+		updateCustomIcon('/jarvis-logo.svg');
+	}
+};
+
+const updateCustomIcon = (iconUrl: string) => {
+	try {
+		// Add timestamp to force cache busting
+		const timestampedUrl = iconUrl.includes('data:') ? iconUrl : `${iconUrl}?t=${Date.now()}`;
+		
+		// Update favicon with cache busting
+		const favicon = document.querySelector('link[rel="icon"]') as HTMLLinkElement;
+		if (favicon) {
+			favicon.href = timestampedUrl;
+		}
+
+		// Update apple-touch-icon
+		const appleTouchIcon = document.querySelector('link[rel="apple-touch-icon"]') as HTMLLinkElement;
+		if (appleTouchIcon) {
+			appleTouchIcon.href = timestampedUrl;
+		}
+
+		// Update splash screen logos if they exist
+		const splashLogo = document.getElementById('logo') as HTMLImageElement;
+		if (splashLogo) {
+			splashLogo.src = timestampedUrl;
+		}
+
+		const splashLogoHer = document.getElementById('logo-her') as HTMLImageElement;
+		if (splashLogoHer) {
+			splashLogoHer.src = timestampedUrl;
+		}
+
+		// Force favicon update by recreating multiple link elements
+		const head = document.head || document.getElementsByTagName('head')[0];
+		
+		// Remove all existing favicon links
+		const existingFavicons = document.querySelectorAll('link[rel*="icon"]');
+		existingFavicons.forEach(link => link.remove());
+		
+		// Create new favicon links
+		const faviconLinks = [
+			{ rel: 'icon', type: 'image/x-icon', href: timestampedUrl },
+			{ rel: 'shortcut icon', type: 'image/x-icon', href: timestampedUrl },
+			{ rel: 'apple-touch-icon', href: timestampedUrl }
+		];
+		
+		faviconLinks.forEach(linkData => {
+			const link = document.createElement('link');
+			link.rel = linkData.rel;
+			if (linkData.type) link.type = linkData.type;
+			link.href = linkData.href;
+			head.appendChild(link);
+		});
+
+	} catch (error) {
+		console.error('Error updating custom icon:', error);
+	}
+};
+
 export const showSidebar = writable(false);
 export const showSearch = writable(false);
 export const showSettings = writable(false);
@@ -146,6 +221,13 @@ type Settings = {
 	splitLargeDeltas?: boolean;
 	chatDirection: 'LTR' | 'RTL' | 'auto';
 	ctrlEnterToSend?: boolean;
+	memory?: boolean;
+	assistantName?: string;
+	customIcon?: {
+		name: string;
+		type: string;
+		data: string;
+	} | null;
 
 	system?: string;
 	requestFormat?: string;

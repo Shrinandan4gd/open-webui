@@ -27,7 +27,8 @@
 		isApp,
 		appInfo,
 		toolServers,
-		playingNotificationSound
+		playingNotificationSound,
+		updateBranding
 	} from '$lib/stores';
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
@@ -35,6 +36,7 @@
 
 	import { executeToolServer, getBackendConfig } from '$lib/apis';
 	import { getSessionUser, userSignOut } from '$lib/apis/auths';
+	import { getUserSettings } from '$lib/apis/users';
 
 	import '../tailwind.css';
 	import '../app.css';
@@ -51,6 +53,37 @@
 
 	import { beforeNavigate } from '$app/navigation';
 	import { updated } from '$app/state';
+
+	// Custom favicon logic
+	$: faviconSrc = $settings?.customIcon?.data || '/jarvis-logo.svg';
+	const applyPersonalizationSettings = async () => {
+		if (localStorage.token) {
+			try {
+				const userSettings = await getUserSettings(localStorage.token);
+				if (userSettings?.ui) {
+					const { assistantName, customIcon } = userSettings.ui;
+					
+					// Update the settings store first
+					settings.update(s => ({
+						...s,
+						assistantName,
+						customIcon
+					}));
+					
+					// Cache settings to localStorage for login page
+					localStorage.setItem('webui_settings', JSON.stringify({
+						assistantName,
+						customIcon
+					}));
+					
+					// Apply branding using the utility function
+					updateBranding(assistantName || 'Jarvis', customIcon);
+				}
+			} catch (error) {
+				console.error('Error loading personalization settings:', error);
+			}
+		}
+	};
 
 	// handle frontend updates (https://svelte.dev/docs/kit/configuration#version)
 	beforeNavigate(({ willUnload, to }) => {
@@ -590,6 +623,9 @@
 						await user.set(sessionUser);
 						await config.set(await getBackendConfig());
 
+						// Apply personalization settings after user is set
+						await applyPersonalizationSettings();
+
 						// Set up the token expiry check
 						if (tokenTimer) {
 							clearInterval(tokenTimer);
@@ -653,7 +689,7 @@
 
 <svelte:head>
 	<title>{$WEBUI_NAME}</title>
-	<link crossorigin="anonymous" rel="icon" href="{WEBUI_BASE_URL}/static/favicon.png" />
+	<link crossorigin="anonymous" rel="icon" href={faviconSrc} />
 
 	<!-- rosepine themes have been disabled as it's not up to date with our latest version. -->
 	<!-- feel free to make a PR to fix if anyone wants to see it return -->
